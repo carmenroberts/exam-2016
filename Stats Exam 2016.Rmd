@@ -1,0 +1,165 @@
+---
+title: "Stats Exam 2016"
+author: "Carmen Roberts"
+date: "2016/08/30"
+output: github_document
+---
+
+## Question 1
+
+**Null Hypothesis:** There is no relationship between oral body temperature and heart rate between males and females.
+
+**Alternative Hypothesis:** There is a relationsship between oral body temperature and heart rate between males and females.
+
+**Statistical test(s):** Body temperature and heart rate are normally distributed, parametric, paired data, categorical data and is on an interval scale.Therefore, a one-way repeated-measures ANOVA will be used to test the hypothesis. Significance is set at p<0.05 
+
+**Assumptions:** There is an equal variance across the groups. The errors are independent. The data is matching effective.
+
+
+```{r, question_1, echo=FALSE, warning=FALSE}
+
+#indicate which package(s) to use
+library(readr)              
+library(tidyr)
+library(dplyr)
+
+#import dataset using URL
+q1 <- read_csv('https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/exam-data-2016/question1.csv')
+
+#plot data
+male <- plot(q1$body_temperature, q1$male)
+female <- plot(q1$body_temperature, q1$female)
+
+#summary statistics of dataset
+summary(q1)
+
+#tidy data by gathering
+g <- gather(q1, "Body Temperature", "Heart rate", 2:3, na.rm = FALSE)
+
+#summary statistics of gathered data
+summary(g)
+
+#one-way repeted-measures ANOVA for males
+aov_male <- aov(body_temperature ~ male, data = q1)
+summary(aov_male)
+
+#one-way repeated-measures ANOVA for females
+aov_female <- aov(body_temperature ~ female, data = q1)
+summary(aov_female)
+
+#one-way repeated-measures ANOVA for HR
+aov_HR <- aov(male ~ female, data = q1)
+summary(aov_HR)
+
+```
+
+**Conclusion:** For data from male participants show F=2.31; p=0.133 and for female participants F=5.528; p=0.022.We reject our null hypothesis and conclude that there is a difference in oral body temperature en heart rate between males and females.      
+
+
+
+## Question 2
+
+**Null Hypothesis:** The direction of the first stumble and the final position relative to the line is not associated with sex or hand dominance.
+
+**Alternative Hypothesis:** The direction of the first stumble and the final position relative to the line is associated with sex and hand dominance.
+
+**Statistical test(s):** The data is paired and non-parametric. Therefore, a Wilcoxon signed-rank test will be used to test the hypothesis.Significance is set at p<0.05. 
+
+**Assumptions for non-parametric data:**  The errors are independent. The data matching is effective. Samples are drawn from the same shape distributions.
+
+
+```{r, question_2, echo=FALSE, warning=FALSE} 
+
+#indicate which package(s) to use
+library(readr)
+library(tidyr)
+library(dplyr)
+
+#import dataset using URL
+q2 <- read_csv('https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/exam-data-2016/question2.csv')
+
+#plot the data
+plot(q2)
+
+#summary statistic of dataset
+summary(q2)
+
+#Wilcoxon signed-rank test to test hypothesis
+wilcox.test(q2$sex, q2$first_stumble, paired = FALSE)
+wilcox.test(q2$sex, q2$final_position, paired = FALSE)
+wilcox.test(q2$handedness, q2$first_stumble, paired = FALSE)
+wilcox.test(q2$handedness, q2$final_position, paired = FALSE)
+```
+
+**Conclusions:** There is no significant relationship between gender and the direction of the first stumble with  p=0.421. There is a significant relationship between handedness and and the first stumble with p<2.2e-16.
+Therefore, we reject the null hypothesis.
+
+##Question 3
+
+**Null Hypothesis:** There is no relationship between the run number, he running time and calories consumed.
+
+**Alternative Hypothesis:** There is a relationship between the run number, the running time and the calories consumed. 
+
+**Statistical test(s):** The data is paired and non-parametric. Therefore a Wilcoxon signed-rank test will be used to test the hypothesis.
+
+**Assumptions:**
+
+```{r, question_3, echo=FALSE}
+
+#indicate which package(s) to use
+library(readr)
+
+#import dataset using URL
+q3 <- read_csv('https://dl.dropboxusercontent.com/u/11805474/painblogr/biostats/exam-data-2016/question3.csv')
+
+#plot the data
+plot(x = time, y = calories)
+
+#add linear regression line
+q3_reg <- lm(time ~ calories, data = q3)
+
+#QQ-plot to test for normality of residuals
+qqnorm(q3_reg$residuals)
+qqline(q3_reg$residuals)
+
+#fitted vs residual plot to test for homoskedasticity
+plot(q3_reg$fitted, q3_reg$residuals)
+
+```
+
+**Concluions:**
+
+
+## Question 4
+
+```{r, question_4, echo=FALSE}
+foo <- rnorm(10000, mean = 60, sd = 3) # final mark
+bar <- rnorm(10000, mean = 68, sd = 5) # project mark
+baz <- rep(seq(from = 1997, to = 2006), each = 1) # years
+
+year <- sample(baz, 150, replace = TRUE,
+               prob = c(0.05, 0.05, 0.08, 0.08, 
+                          0.1, 0.13, 0.14, 0.13, 0.12, 0.12))
+project_mark <- sample(bar, 150, replace = TRUE)
+final_mark <- sample(foo, 150, replace = TRUE)
+
+plot_data <- data_frame(year = year,
+                        project_mark = round(project_mark, 1),
+                        final_mark = round(final_mark, 1)) %>%
+    arrange(year)
+
+#plot the data
+
+```
+    
+
+
+
+
+
+
+
+
+
+
+
